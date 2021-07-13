@@ -94,21 +94,14 @@ add_action( 'after_setup_theme', 'hello_elementor_setup' );
 
 function hello_maybe_update_theme_version_in_db() {
 	$theme_version_option_name = 'hello_theme_version';
-	// The theme version saved in the database.
 	$hello_theme_db_version = get_option( $theme_version_option_name );
 
-	// If the 'hello_theme_version' option does not exist in the DB, or the version needs to be updated, do the update.
 	if ( ! $hello_theme_db_version || version_compare( $hello_theme_db_version, HELLO_ELEMENTOR_VERSION, '<' ) ) {
 		update_option( $theme_version_option_name, HELLO_ELEMENTOR_VERSION );
 	}
 }
 
 if ( ! function_exists( 'hello_elementor_scripts_styles' ) ) {
-	/**
-	 * Theme Scripts & Styles.
-	 *
-	 * @return void
-	 */
 	function hello_elementor_scripts_styles() {
 		$enqueue_basic_style = apply_filters_deprecated( 'elementor_hello_theme_enqueue_style', [ true ], '2.0', 'hello_elementor_enqueue_style' );
 		$min_suffix          = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
@@ -135,13 +128,6 @@ if ( ! function_exists( 'hello_elementor_scripts_styles' ) ) {
 add_action( 'wp_enqueue_scripts', 'hello_elementor_scripts_styles' );
 
 if ( ! function_exists( 'hello_elementor_register_elementor_locations' ) ) {
-	/**
-	 * Register Elementor Locations.
-	 *
-	 * @param ElementorPro\Modules\ThemeBuilder\Classes\Locations_Manager $elementor_theme_manager theme manager.
-	 *
-	 * @return void
-	 */
 	function hello_elementor_register_elementor_locations( $elementor_theme_manager ) {
 		$hook_result = apply_filters_deprecated( 'elementor_hello_theme_register_elementor_locations', [ true ], '2.0', 'hello_elementor_register_elementor_locations' );
 		if ( apply_filters( 'hello_elementor_register_elementor_locations', $hook_result ) ) {
@@ -152,11 +138,6 @@ if ( ! function_exists( 'hello_elementor_register_elementor_locations' ) ) {
 add_action( 'elementor/theme/register_locations', 'hello_elementor_register_elementor_locations' );
 
 if ( ! function_exists( 'hello_elementor_content_width' ) ) {
-	/**
-	 * Set default content width.
-	 *
-	 * @return void
-	 */
 	function hello_elementor_content_width() {
 		$GLOBALS['content_width'] = apply_filters( 'hello_elementor_content_width', 800 );
 	}
@@ -167,16 +148,8 @@ if ( is_admin() ) {
 	require get_template_directory() . '/includes/admin-functions.php';
 }
 
-/**
- * If Elementor is installed and active, we can load the Elementor-specific Settings & Features
-*/
-
-// Allow active/inactive via the Experiments
 require get_template_directory() . '/includes/elementor-functions.php';
 
-/**
- * Include customizer registration functions
-*/
 function hello_register_customizer_functions() {
 	if ( hello_header_footer_experiment_active() && is_customize_preview() ) {
 		require get_template_directory() . '/includes/customizer-functions.php';
@@ -185,13 +158,6 @@ function hello_register_customizer_functions() {
 add_action( 'init', 'hello_register_customizer_functions' );
 
 if ( ! function_exists( 'hello_elementor_check_hide_title' ) ) {
-	/**
-	 * Check hide title.
-	 *
-	 * @param bool $val default value.
-	 *
-	 * @return bool
-	 */
 	function hello_elementor_check_hide_title( $val ) {
 		if ( defined( 'ELEMENTOR_VERSION' ) ) {
 			$current_doc = Elementor\Plugin::instance()->documents->get( get_the_ID() );
@@ -204,9 +170,7 @@ if ( ! function_exists( 'hello_elementor_check_hide_title' ) ) {
 }
 add_filter( 'hello_elementor_page_title', 'hello_elementor_check_hide_title' );
 
-/**
- * Wrapper function to deal with backwards compatibility.
- */
+
 if ( ! function_exists( 'hello_elementor_body_open' ) ) {
 	function hello_elementor_body_open() {
 		if ( function_exists( 'wp_body_open' ) ) {
@@ -408,8 +372,6 @@ function field_shortcode( $atts, $content = null ) {
 			}
 		</style>
 	';
-
-	// [shortpress iid="post__form_field" fid="post__form" name="post__form" title="Insert post ID" button="Submit" text_contrast="white" text="gray" bgcolor="green" ibgcolor="whitesmoke"]
 }
 add_shortcode( 'shortpress', 'field_shortcode' );
 
@@ -454,6 +416,6 @@ add_action( 'wp_ajax_nopriv_ping_php', 'ping_php' );
 function enqueue_scripts() {
 	wp_register_script('ajax-script',  get_template_directory_uri() .'/assets/js/functions.js', array('jquery'), 1.0 ); 
 	wp_localize_script( 'ajax-script', 'ajax_object', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) ); // setting ajaxurl
-    wp_enqueue_script( 'ajax-script'); // jQuery will be included automatically
+    wp_enqueue_script( 'ajax-script'); 
 }
 add_action('wp_enqueue_scripts', 'enqueue_scripts');
